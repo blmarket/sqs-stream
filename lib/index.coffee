@@ -46,7 +46,7 @@ class SQSReadable extends stream.Readable
       return @push(null) unless resp.Messages?
       return @push(null) if resp.Messages.length == 0
 
-      @local_buffer.push msg.Body for msg in resp.Messages
+      @local_buffer.push JSON.stringify(msg) for msg in resp.Messages
 
       switch @wait
         when 'strict' then @strict resp.Messages, =>
