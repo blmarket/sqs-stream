@@ -1,0 +1,29 @@
+{
+  "name": "sqs-stream",
+  "version": "0.0.0",
+  "description": "Wrap Amazon SQS into Readable stream",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blmarket/sqs-stream"
+  },
+  "keywords": [
+    "AWS",
+    "SQS",
+    "Amazon",
+    "Stream",
+    "Readable"
+  ],
+  "author": "blmarket",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/blmarket/sqs-stream/issues"
+  },
+  "dependencies": {
+    "coffee-script": "~1.6.3",
+    "aws-sdk": "~1.12.0"
+  }
+}

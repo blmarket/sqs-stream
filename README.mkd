@@ -1,0 +1,4 @@
+SQS Stream
+----------
+
+Wraps Amazon SQS into Readable stream
