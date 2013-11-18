@@ -65,4 +65,4 @@ createReadStream = (options) -> new SQSReadable(options)
 
 # exported methods
 module.exports.setConfig = setConfig
-module.epxorts.createReadStream = createReadStream
+module.exports.createReadStream = createReadStream
