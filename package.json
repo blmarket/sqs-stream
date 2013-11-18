@@ -1,6 +1,6 @@
 {
   "name": "sqs-stream",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Wrap Amazon SQS into Readable stream",
   "main": "index.coffee",
   "scripts": {
