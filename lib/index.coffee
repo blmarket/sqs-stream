@@ -7,7 +7,7 @@ class SQSReadable extends stream.Readable
     {@url} = options
     @sqs = new AWS.SQS()
     @local_buffer = []
-    @wait = 'strict'
+    @wait_delete = {}
     
     super { objectMode: true }
 
@@ -46,15 +46,23 @@ class SQSReadable extends stream.Readable
       return @push(null) unless resp.Messages?
       return @push(null) if resp.Messages.length == 0
 
-      @local_buffer.push JSON.stringify(msg) for msg in resp.Messages
+      for msg in resp.Messages
+        do (msg) =>
+          msgid = msg.MessageId
+          return if @wait_delete[msgid]
+          @wait_delete[msgid] = true
 
-      switch @wait
-        when 'strict' then @strict resp.Messages, =>
-          @_read()
-        when 'optimistic' then @optimistic resp.Messages, =>
-          @_read()
-        else throw new Error('wait method should be strict or optimistic')
-      return
+          @local_buffer.push JSON.stringify(msg)
+          @sqs.deleteMessage {
+            QueueUrl: @url
+            ReceiptHandle: msg.ReceiptHandle
+          }, (err) =>
+            delete @wait_delete[msgid]
+
+      while(@local_buffer.length > 0)
+        item = @local_buffer.shift()
+        return unless @push(item)
+
     return
 
 setConfig = (config) ->
