@@ -9,25 +9,14 @@ Here is our in-use code snippet
 
     topic = require 'sqs-stream'
 
-    topic.setConfig({
+    topic.createReadStream({
+      url: 'YOUR_SQS_QUEUE_URL',
       accessKeyId: 'your-access-key',
       secretAccessKey: 'your-access-secret',
-      region: 'ap-northeast-1'
-    })
-    
-    topic.createReadStream({url: 'YOUR_SQS_QUEUE_URL'}).pipe(process.stdout)
+      region: 'your-region'
+    }).pipe(process.stdout)
 
 ## API
-
-### setConfig
-
-    setConfig(options)
-
-set AWS credentials, all parameters are just passed into aws-sdk. available options are
-
-* options.accessKeyId - Your AWS access key(required)
-* options.secretAccessKey - Your AWS secret key(required)
-* options.region - Your AWS region(defaults to 'us-east-1' as aws-sdk does)
 
 ### createReadStream
 
@@ -36,9 +25,21 @@ set AWS credentials, all parameters are just passed into aws-sdk. available opti
 create Readable Stream from given queue URL. available options are
 
 * options.url - URL of your SQS. e.g) https://sqs.ap-northeast-1.amazonaws.com/-some-number-/-some-name-you-used
+* options.accessKeyId - Your AWS access key(required)
+* options.secretAccessKey - Your AWS secret key(required)
+* options.region - Your AWS region(defaults to 'us-east-1' as aws-sdk does)
+
+### setConfig
+
+    setConfig(options) # DEPRECATED
+
+set AWS credentials, all parameters are just passed into aws-sdk. available options are
+
+* options.accessKeyId - Your AWS access key(required)
+* options.secretAccessKey - Your AWS secret key(required)
+* options.region - Your AWS region(defaults to 'us-east-1' as aws-sdk does)
 
 ## TODO
 
 * Limit total number of messages
-* Give user to select optimistic delete message. currently code wait to remove current in-flight messages before
-receiving next messages and this makes run quite slowly.
+* Give user way how to delete processed messages
