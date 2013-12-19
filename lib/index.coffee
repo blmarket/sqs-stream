@@ -4,8 +4,11 @@ stream = require 'stream'
 
 class SQSReadable extends stream.Readable
   constructor: (options) ->
-    {@url} = options
-    @sqs = new AWS.SQS()
+    {@url, accessKeyId, secretAccessKey, region} = options
+    region = 'us-east-1' unless region?
+    @sqs = new AWS.SQS({ accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, region: region })
+
+    # When stream let us stop, we keep unsent messages into local buffer.
     @local_buffer = []
     @wait_delete = {}
     
@@ -38,8 +41,7 @@ class SQSReadable extends stream.Readable
     @sqs.receiveMessage {
       QueueUrl: @url
       MaxNumberOfMessages: 10
-      # WaitTimeSeconds: 10
-      # VisibilityTimeout: 30
+      VisibilityTimeout: 100
       AttributeNames: [ 'All' ]
     }, (err, resp) =>
       return @push(null) if err?
@@ -66,6 +68,7 @@ class SQSReadable extends stream.Readable
     return
 
 setConfig = (config) ->
+  console.log 'setConfig is deprecated, pass credential directly into createReadStream'
   AWS.config.update(config)
   return
 
